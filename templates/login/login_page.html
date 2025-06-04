@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/public/img/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="/public/css/login.css">
+</head>
+
+<body>
+    <div class="sheet p-4" style="width: 40%; height: 50%;">
+        <h2>Iniciar Sesión</h2>
+        <form method="post" action="/login/singin">
+            <div class="input-control">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="input-control">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit"class="button">Entrar</button>
+        </form>
+    </div>
+
+    <script src="/public/js/global.variables.js"></script>
+</body>
+
+</html>

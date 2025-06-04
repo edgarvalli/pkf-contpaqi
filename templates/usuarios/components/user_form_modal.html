@@ -1,0 +1,121 @@
+<div class="modal modal-fade" id="user-form-id" tabindex="-1" role="dialog" aria-modal="true"
+    aria-labelledby="userform">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">({title})</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form @submit="handleSubmit">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="input-control col-6 p-4">
+                            <label for="name-id">Nombre</label>
+                            <input type="text" name="displayname" id="name-id"
+                                @input="e => user.displayname = e.target.value" :value="user.displayname">
+                        </div>
+                        <div class="input-control col-6 p-4">
+                            <label for="username-id">Usuario</label>
+                            <input type="text" name="username" id="username-id"
+                                @input="e => user.username = e.target.value" :value="user.username">
+                        </div>
+                        <div class="input-control col-6 p-4">
+                            <label for="email-id">Correo</label>
+                            <input type="email" name="email" id="email-id" @input="e => user.email = e.target.value"
+                                :value="user.email">
+                        </div>
+                        <div class="input-control col-6 p-4" v-if="!user.id">
+                            <label for="password-id">Contraseña</label>
+                            <input type="password" name="password" id="password-id"
+                                @input="e => user.password = e.target.value" value="">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col d-flex justify-content-end p-4">
+                            <button class="btn btn-primary" style="width: 10rem;">GUARDAR</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function vueAppModal() {
+
+        const UserFormModal = {
+            delimiters: ['({', '})'],
+            data() {
+                return {
+                    title: 'Usuario Nuevo',
+                    toastMessage: '',
+                    user: {
+                        displayname: '',
+                        username: '',
+                        email: '',
+                        password: '',
+                        id: 0,
+                    }
+                };
+            },
+            mounted() {
+                const userModal = document.getElementById('user-form-id');
+
+                userModal.addEventListener("show.bs.modal", () => {
+                    const user = userModal.getAttribute('data-user');
+                    this.user = JSON.parse(user) || {};
+                })
+
+                userModal.addEventListener("hide.bs.modal", (el) => {
+                    userModal.removeAttribute('data-user');
+                })
+            },
+            methods: {
+                handleSubmit(e) {
+                    // Puedes agregar validaciones aquí si lo deseas
+                    // Por ahora, deja que el formulario se envíe normalmente
+                    e.preventDefault()
+                    let url = '/api/common/users/save';
+                    if (this.user.id || this.user.id > 0) {
+                        url = '/api/common/users/update/' + this.user.id
+                        delete this.user.id
+                    }
+                    fetch(url, {
+                        method: "post",
+                        body: JSON.stringify({ data: this.user }),
+                        headers: {
+                            'content-type': 'application/json',
+                            'accept': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(response => {
+                            if (response.error) {
+                                alert(response.message);
+                                this.user = {}
+                            }
+
+                            this.closeModal()
+                        })
+                },
+                closeModal() {
+                    let userModal = document.getElementById('user-form-id');
+                    userModal = bootstrap.Modal.getInstance(userModal);
+                    userModal.hide()
+                }
+            }
+        };
+
+        const modalApp = Vue.createApp(UserFormModal)
+        modalApp.mount('#user-form-id');
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        vueAppModal()
+    })
+</script>

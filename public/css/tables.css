@@ -1,0 +1,15 @@
+.tabla-balance-general {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+}
+
+.tabla-balance-general th,
+.tabla-balance-general td {
+    width: 5rem;
+}
+
+.tabla-balance-general th:first-child,
+.tabla-balance-general td:first-child {
+    width: 300px;
+}

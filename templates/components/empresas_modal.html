@@ -1,0 +1,54 @@
+<div class="modal fade" tabindex="-1" id="empresasModalId" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Selecciona la empresa</h5>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            </div>
+            <div class="modal-body">
+                <ul class="list-group" id="list-group-empresas"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const empresasModal = new bootstrap.Modal("#empresasModalId", {
+        keyboard: false
+    })
+
+    const seleccionarEmpresa = (empresa, dbname) => {
+        const nombreEmpresaElement = document.getElementById("nombreEmpresa")
+        nombreEmpresaElement.textContent = empresa
+        window.sessionStorage.setItem("empresa", empresa)
+        window.sessionStorage.setItem("dbname", dbname)
+        window.location.reload()
+    }
+
+    const obtenerEmpresas = async () => {
+        const request = await fetch('/api/empresas')
+        response = await request.json()
+        if (response.error) return alert(response.message);
+
+        const listGroup = document.getElementById("list-group-empresas")
+        listGroup.innerHTML = ''
+        response.empresas.map(empresa => {
+            const li = document.createElement("li")
+            li.classList.add("list-group-item", "pointer")
+            li.textContent = empresa.empresa
+            li.onclick = () => seleccionarEmpresa(empresa.empresa, empresa.dbname)
+            listGroup.appendChild(li)
+        })
+    }
+
+    const empresa = window.sessionStorage.getItem("empresa")
+    if (empresa === null) {
+        obtenerEmpresas();
+        empresasModal.show();
+    }
+
+    document.getElementById('empresasModalId').addEventListener('shown.bs.modal', () => {
+        obtenerEmpresas()
+    })
+</script>

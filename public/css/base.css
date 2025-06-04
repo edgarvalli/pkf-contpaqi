@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css");
+@import url('/public/css/controls.css');
+/*
+@import url('/public/css/margins.css');
+@import url('/public/css/tables.css'); */
+
+html {
+    background-color: #f4f4f4;
+}
+
+body {
+    background: #f4f4f4;
+    min-height: 100vh;
+    font-family: "Roboto", Arial, sans-serif;
+    margin: 0;
+    font-size: 12px;
+    transition: all .25s;
+}
+
+.bg-pkf {
+    background: rgb(0, 0, 102);
+    color: #fff;
+}
+
+.color-pkf {
+    color: rgb(0, 0, 102);
+}
+
+.dropdown-menu-font a {
+    font-size: 12px;
+}
+
+.avatar-circle {
+    border-radius: 50%;
+}
+
+.pointer:hover {
+    cursor: pointer;
+    background: #f4f4f4;
+}
+
+.ml-1 {
+    margin-left: .25rem;
+}
+
+.ml-2 {
+    margin-left: .5rem;
+}
+
+nav {
+    /* background-color: #2c3e50; */
+    background-color: rgb(0, 0, 102);
+}
+
+nav .dropdown-menu {
+    background: rgb(0, 0, 102);
+}
+
+.sheet {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.sheet-header {
+    padding: 1rem;
+    text-align: center;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.sticky-col {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: white;
+    /* box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.1); */
+    width: 20%;
+}
+
+.sticky-col::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -5px;
+    width: 5px;
+    height: 100%;
+    /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
+}
+
+.table-container table {
+    min-width: 800px;
+}
+
+.table-container table tr td:hover {
+    cursor: pointer;
+    background: #f4f4f4;
+    transition: all .5s;
+}
+
+th.sticky-col,
+td.sticky-col {
+    min-width: 150px;
+}
+
+.table-container thead th,
+.table-container tfoot th {
+    background-color: rgb(0, 0, 102);
+    color: white;
+}
+
+.table-container thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    /* background-color: #f8f9fa; */
+}
+
+/* Asegurar que la columna pegajosa esté por encima */
+.sticky-col {
+    z-index: 3;
+}
+
+.table-container thead th.sticky-col {
+    z-index: 4;
+}
+
+html[data-bs-theme=dark] body {
+    background: #181a1b;
+    color: #e0e0e0;
+    transition: all .25s;
+}
+
+html[data-bs-theme=dark],
+.bg-pkf,
+html[data-bs-theme=dark] nav,
+html[data-bs-theme=dark] nav .dropdown-menu,
+html[data-bs-theme=dark] .table-container thead th,
+html[data-bs-theme=dark] .table-container tfoot th {
+    background: #23234a !important;
+    color: #fff !important;
+    transition: all .25s;
+}
+
+html[data-bs-theme=dark] .color-pkf {
+    color: #7ea2ff !important;
+    transition: all .25s;
+}
+
+html[data-bs-theme=dark] .sheet {
+    background: #23232b;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    transition: all .25s;
+}
+
+html[data-bs-theme=dark] .table-container table tr td {
+    background: #23232b;
+    color: #e0e0e0;
+    transition: all .25s;
+}
+
+html[data-bs-theme=dark] .sticky-col {
+    background-color: #23232b;
+    transition: all .25s;
+}
+
+html[data-bs-theme=dark] .pointer:hover {
+    background: #23232b;
+    transition: all .25s;
+}
+
+html[data-bs-theme=dark] .btn-light {
+    background: #232323;
+    border: none;
+    transition: all .25s;
+}

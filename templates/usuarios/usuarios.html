@@ -1,0 +1,129 @@
+{% extends 'template.html' %}
+
+{% block content %}
+
+{% include 'usuarios/components/user_form_modal.html' %}
+{% include 'usuarios/components/user_change_password.html' %}
+{% include 'components/fetch_loading.html' %}
+
+<div class="container" id="usersapp">
+    <div class="sheet mt-4 p-2">
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <button type="button" class="btn btn-light color-pkf" data-bs-toggle="modal"
+                    data-bs-target="#user-form-id">
+                    <i class="bi bi-person-plus-fill me-2"></i> Crear Usuario
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <td>Nombre</td>
+                            <th>Usuario</th>
+                            <th>Correo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="user in users">
+                            <td>({ user.id })</td>
+                            <td>({ user.displayname })</td>
+                            <td>({ user.username })</td>
+                            <td>({ user.email })</td>
+                            <td class="d-flex">
+                                <i class="bi bi-pencil-square pointer" @click="editUser(user)"></i>
+                                <i class="bi bi-key pointer ml-2" @click="changeUserPassword(user)"></i>
+                                <i class="bi bi-trash pointer ml-2" @click="deleteUser(user)"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const editUser = (el = document.getElementById()) => {
+        let userModal = document.getElementById('user-form-id');
+        userModal.setAttribute('data-user', el.getAttribute('data-user'));
+        userModal = new bootstrap.Modal(userModal);
+        userModal.show();
+    }
+    const changePassword = (el = document.getElementById()) => {
+        const id = el.getAttribute('data-user-id');
+        const name = el.getAttribute('data-user-name');
+        let changePwdModal = document.getElementById('user-change-modal-id');
+        changePwdModal.setAttribute('data-user-id', id);
+        changePwdModal.setAttribute('data-user-name', name);
+        changePwdModal = new bootstrap.Modal(changePwdModal);
+        changePwdModal.show()
+
+    }
+
+    const vueConfig = {
+        delimiters: ['({', '})'],
+        data() {
+            return {
+                users: [],
+                userFormModal: document.getElementById('user-form-id')
+            }
+        },
+        mounted() {
+            this.fetchUsers();
+            this.userFormModal.addEventListener("hide.bs.modal", () => this.fetchUsers())
+        },
+        methods: {
+            editUser(user) {
+                let userModal = document.getElementById('user-form-id');
+                userModal.setAttribute('data-user', JSON.stringify(user));
+                userModal = new bootstrap.Modal(userModal);
+                userModal.show();
+                this.fetchUsers()
+            },
+            changeUserPassword(user) {
+                let changePwdModal = document.getElementById('user-change-modal-id');
+                changePwdModal.setAttribute('data-user-id', user.id);
+                changePwdModal.setAttribute('data-user-name', user.displayname);
+                changePwdModal = new bootstrap.Modal(changePwdModal);
+                changePwdModal.show();
+                this.fetchUsers()
+
+            },
+            deleteUser(user) {
+                const allow = confirm(`¿Seguro que desea eliminar el usuario ${user.displayname}`)
+
+                if (allow) {
+                    fetch("/api/users/delete/" + user.id)
+                        .then(response => response.json())
+                        .then(response => {
+                            if (response.error) return alert(response.message)
+                            this.fetchUsers();
+                        })
+                }
+
+            },
+            fetchUsers() {
+                const loadingElement = document.getElementById("loading-modal-id");
+                new bootstrap.Modal(loadingElement).show()
+                fetch("/api/common/users/?limit=50")
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.error) return alert(response.message);
+                        this.users = response.data;
+                        bootstrap.Modal.getInstance(loadingElement).hide()
+                    })
+            }
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        Vue.createApp(vueConfig).mount("#usersapp")
+    })
+</script>
+
+{% endblock %}

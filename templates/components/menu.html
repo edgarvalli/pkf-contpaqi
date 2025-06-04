@@ -1,0 +1,70 @@
+<nav class="navbar navbar-expand-lg bg-pkf" data-bs-theme="dark">
+    <div class="container-fluid">
+        <div class="navbar-brand">
+            <img src="/public/img/logo.png" alt="logo" width="60" height="30" class="d-inline-block align-text-top">
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-menu">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/app">Inicio</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="menu" href="#" data-bs-toggle="dropdown">
+                        Contabilidad
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-font">
+                        <li>
+                            <a href="/app/contabilidad/balanceGeneral" class="dropdown-item">Balance General</a>
+                        </li>
+                        <li>
+                            <a href="/app/contabilidad/analisisBalanceGeneral" class="dropdown-item">Analisis Balance General</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" role="menu" data-bs-toggle="dropdown" class="nav-link dropdown-toggle">Configuración</a>
+
+                    <ul class="dropdown-menu dropdown-menu-font">
+                        <li>
+                            <a href="#" class="dropdown-item">Configuración</a>
+                        </li>
+                        <li>
+                            <a href="/app/usuarios" class="dropdown-item">Usuarios</a>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" style="font-size: .75rem; text-decoration: none; color: white;"
+                                onclick="toggleTheme(this)">Cambiar Tema</button>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/login/singout" class="nav-link">Cerrar Sesión</a>
+                </li>
+            </ul>
+            <div class="d-flex" onclick="abrirMenuEmpresas()">
+                <h5 style="font-size: 12px; color: white; cursor: pointer;" id="nombreEmpresa"></h5>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    const abrirMenuEmpresas = () => {
+        const empresasModal = new bootstrap.Modal("#empresasModalId", {
+            keyboard: false
+        })
+        empresasModal.show()
+    }
+
+    (function () {
+        const nombreEmpresaElement = document.getElementById("nombreEmpresa")
+        let empresa = window.sessionStorage.getItem("empresa")
+        if (empresa === null) empresa = "Seleccionar empresa"
+        nombreEmpresaElement.textContent = empresa
+    }())
+</script>

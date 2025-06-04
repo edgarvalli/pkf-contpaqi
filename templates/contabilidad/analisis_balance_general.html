@@ -1,0 +1,86 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<div id="app" class="container mt-2 pb-2">
+
+    <button type="button" class="btn-close d-none" data-bs-toggle="modal" data-bs-target="#building-page"
+        id="modal-button"></button>
+    <div class="modal fade" id="building-page" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        id="modal-button-close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-between align-items-center">
+                    <h5>Cargando....</h5>
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sheet mt-2">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="input-control col-2">
+                <label for="ejercicioId">Ejercicio</label>
+                <input type="number" :value="ejercicio" min="1980" id="ejercicioId"
+                    @input="event => ejercicio = event.target.value">
+            </div>
+            <div class="input-control col-2">
+                <label for="periodoId">Periodo</label>
+                <input type="number" id="periodoId" max="12" min="1" :value="periodo"
+                    @input="event => periodo = event.target.value">
+            </div>
+            <div class="col-2">
+                <button class="btn btn-light color-pkf" style="font-size: .74rem;" v-on:click="correrAnalisis">EJECUTAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sheet mt-2 p-2">
+        <div class="sheet-header">
+            <h4>ANALITICA ESTADO DE SITUACION FINANCIERA</h4>
+        </div>
+        <div class="sheet-body">
+            <div class="sheet-body table-container" v-for="cuenta in cuentas">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="sticky-col">({cuenta.nombre})</th>
+                            <th v-for="mes in meses">({mes})</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="sc in cuenta.subcuentas">
+                            <td class="sticky-col">({sc.nombre})</td>
+                            <td v-for="(mes,i) in meses">
+                                <span :class="{'text-danger': sc['Importes' + (i +1)] < 0}">
+                                    ({formatNumber(sc['Importes' + (i + 1)])})
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="sticky-col"></th>
+                            <th v-for="(_,i) in meses">
+                                <span :class="{'text-danger': cuenta.saldos['Importes' + (i +1)] < 0}">
+                                    ({formatNumber(cuenta.saldos['Importes' + (i + 1)])})
+                                </span>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="/public/js/analisisBalanceGeneral.js"></script>
+{% endblock %}
