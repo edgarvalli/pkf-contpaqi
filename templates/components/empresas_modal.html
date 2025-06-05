@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" id="empresasModalId" data-bs-backdrop="static">
+<div class="modal fade" tabindex="-1" id="lista-empresas-modal-id" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,6 +6,10 @@
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
             </div>
             <div class="modal-body">
+                <div id="empresas-loading">
+                    <div class="spinner-border text-primary me-2" role="status" aria-hidden="true"></div>
+                    <span>Obteniendo empresas&hellip;.</span>
+                </div>
                 <ul class="list-group" id="list-group-empresas"></ul>
             </div>
         </div>
@@ -14,25 +18,32 @@
 
 <script>
 
-    const empresasModal = new bootstrap.Modal("#empresasModalId", {
-        keyboard: false
-    })
+    const listaEmpresasModal = document.getElementById("lista-empresas-modal-id");
 
     const seleccionarEmpresa = (empresa, dbname) => {
-        const nombreEmpresaElement = document.getElementById("nombreEmpresa")
+        const nombreEmpresaElement = document.getElementById("nombre-empresa-id");
         nombreEmpresaElement.textContent = empresa
         window.sessionStorage.setItem("empresa", empresa)
         window.sessionStorage.setItem("dbname", dbname)
-        window.location.reload()
+        
+        bootstrap.Modal.getInstance(listaEmpresasModal).hide();
+
     }
 
     const obtenerEmpresas = async () => {
-        const request = await fetch('/api/empresas')
-        response = await request.json()
-        if (response.error) return alert(response.message);
+        const listGroup = document.getElementById("list-group-empresas");
+        const loadingElement = document.getElementById("empresas-loading");
+        const classes = ["d-flex","align-items-center","mb-3"];
 
-        const listGroup = document.getElementById("list-group-empresas")
+        loadingElement.classList.add(...classes);
+        
+        const response = await contpaqiSDK.contabilidad("").listaEmpresas();
+        
+        loadingElement.classList.remove(...classes);
+        loadingElement.classList.add("d-none");
+
         listGroup.innerHTML = ''
+        
         response.empresas.map(empresa => {
             const li = document.createElement("li")
             li.classList.add("list-group-item", "pointer")
@@ -42,13 +53,20 @@
         })
     }
 
-    const empresa = window.sessionStorage.getItem("empresa")
-    if (empresa === null) {
-        obtenerEmpresas();
-        empresasModal.show();
-    }
+    window.addEventListener("DOMContentLoaded", () => {
 
-    document.getElementById('empresasModalId').addEventListener('shown.bs.modal', () => {
-        obtenerEmpresas()
+        if (!listaEmpresasModal) return;
+
+        listaEmpresasModal.addEventListener("shown.bs.modal", () => {
+            obtenerEmpresas();
+        });
+
+        const empresa = window.sessionStorage.getItem("empresa");
+
+        if (empresa === null) {
+            obtenerEmpresas();
+            new bootstrap.Modal(listaEmpresasModal).show();
+        }
+
     })
 </script>

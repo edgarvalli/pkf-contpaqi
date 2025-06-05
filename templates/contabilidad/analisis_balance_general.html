@@ -3,24 +3,7 @@
 {% block content %}
 <div id="app" class="container mt-2 pb-2">
 
-    <button type="button" class="btn-close d-none" data-bs-toggle="modal" data-bs-target="#building-page"
-        id="modal-button"></button>
-    <div class="modal fade" id="building-page" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        id="modal-button-close"></button>
-                </div>
-                <div class="modal-body d-flex justify-content-between align-items-center">
-                    <h5>Cargando....</h5>
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+     {% include 'components/fetch_loading.html' %}
 
     <div class="sheet mt-2">
         <div class="row d-flex justify-content-center align-items-center">
@@ -43,6 +26,7 @@
     <div class="sheet mt-2 p-2">
         <div class="sheet-header">
             <h4>ANALITICA ESTADO DE SITUACION FINANCIERA</h4>
+            <h5 class="text-center">({nombreEmpresa})</h5>
         </div>
         <div class="sheet-body">
             <div class="sheet-body table-container" v-for="cuenta in cuentas">

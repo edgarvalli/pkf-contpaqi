@@ -216,7 +216,6 @@ def obtenerMeses(limit):
     ]
     return meses[:limit]
 
-
 def eliminarDuplicados(lista_cuentas, año_prioritario=None):
     """
     Elimina cuentas duplicadas (mismo código) priorizando:
@@ -254,7 +253,6 @@ def eliminarDuplicados(lista_cuentas, año_prioritario=None):
                     cuentas_por_codigo[codigo] = cuenta
 
     return list(cuentas_por_codigo.values())
-
 
 def render_template_module(template: str, **args):
 

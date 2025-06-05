@@ -52,7 +52,7 @@
                     <img src="/public/img/avatar.png" class="circle-avatar ml-2" alt="avatar">
                 </div>
                 <div class="col-12 d-flex justify-content-end align-items-center pointer" style="height: 1.5rem;" onclick="abrirMenuEmpresas()">
-                    <span style="font-size: 12px; color: white;" class="align-middle" id="nombreEmpresa"></span>
+                    <span style="font-size: 12px; color: white;" class="align-middle" id="nombre-empresa-id"></span>
                     <i class="bi bi-building ml-2" style="font-size: 15px;"></i>
                 </div>
             </div>
@@ -62,14 +62,13 @@
 
 <script>
     const abrirMenuEmpresas = () => {
-        const empresasModal = new bootstrap.Modal("#empresasModalId", {
+        new bootstrap.Modal("#lista-empresas-modal-id", {
             keyboard: false
-        })
-        empresasModal.show()
+        }).show()
     }
 
     (function () {
-        const nombreEmpresaElement = document.getElementById("nombreEmpresa")
+        const nombreEmpresaElement = document.getElementById("nombre-empresa-id")
         let empresa = window.sessionStorage.getItem("empresa")
         if (empresa === null) empresa = "Seleccionar empresa"
         nombreEmpresaElement.textContent = empresa

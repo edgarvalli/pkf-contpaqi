@@ -7,35 +7,37 @@ const app = Vue.createApp({
             meses: [],
             periodo: 0,
             ejercicio: 0,
-            modalButton: document.getElementById('modal-button')
+            loadingModalID: "loading-modal-id"
         }
     },
     mounted() {
-        this.nombreEmpresa = window.sessionStorage.getItem("empresa") || "No hay empresa";
+        
         const now = new Date()
 
         this.ejercicio = now.getFullYear()
         this.periodo = now.getMonth() + 1;
-        this.correrAnalisis()
+        this.correrAnalisis();
+
+        document.getElementById("lista-empresas-modal-id").addEventListener('hidden.bs.modal', () => {
+            this.correrAnalisis();
+        });
+
     },
     methods: {
         async correrAnalisis() {
-            // this.loadingModal.show()
-            document.getElementById('modal-button').click()
+            
+            new bootstrap.Modal(document.getElementById(this.loadingModalID)).show();
+            this.nombreEmpresa = window.sessionStorage.getItem("empresa") || "No hay empresa";
+
             let dbname = window.sessionStorage.getItem("dbname")
             if (dbname === null) return alert("No hay empresa seleccionada");
             this.meses = obtenerMesesAlPeriodo(this.periodo)
-            const request = await fetch(`/api/${dbname}/analisisBalanceGeneral/${this.ejercicio}`)
-            if (!request.ok) {
-                this.loadingModalText = "Error al obtener el analisis"
-                throw new Error("Error al obtener el analisis");
-            }
-
-            const response = await request.json()
-
+            const response = await contpaqiSDK.contabilidad(dbname).analisisBalanceGeneral(this.ejercicio);
             if (response.error) return this.loadingModalText = response.message;
             this.cuentas = response.data
-            setTimeout(() => document.getElementById('modal-button-close').click(), 500)
+
+            bootstrap.Modal.getInstance(document.getElementById(this.loadingModalID)).hide();
+
         },
         formatNumber(number) {
             const mxn = new Intl.NumberFormat('ex-MX', {

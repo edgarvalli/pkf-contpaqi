@@ -1,4 +1,4 @@
-const app = Vue.createApp({
+const balanceGeneralVueParams = {
     delimiters: ['({', '})'],
     data() {
         return {
@@ -11,39 +11,43 @@ const app = Vue.createApp({
             loadingModal: null,
             loadingModalText: 'Cargando Balance General',
             secciones: 0,
-            fullTable: false
+            fullTable: false,
+            loadingModalID: "loading-modal-id"
         }
     },
     mounted() {
-        this.nombreEmpresa = window.sessionStorage.getItem("empresa") || "No hay empresa";
         const now = new Date()
 
         this.ejercicio = now.getFullYear()
         this.periodos = now.getMonth() + 1
 
-        this.generarBalanceGeneral()
+        this.generarBalanceGeneral();
+
+        document.getElementById("lista-empresas-modal-id").addEventListener('hidden.bs.modal', () => {
+            this.generarBalanceGeneral();
+        });
     },
     methods: {
         reloadPage(){
             this.generarBalanceGeneral()
         },
         async generarBalanceGeneral() {
-            document.getElementById('modal-button').click()
-            let dbname = window.sessionStorage.getItem("dbname")
+
+            this.nombreEmpresa = window.sessionStorage.getItem("empresa") || "No hay empresa";
+            const loadingModal = document.getElementById(this.loadingModalID);
+
+            new bootstrap.Modal(loadingModal).show();
+
+            let dbname = window.sessionStorage.getItem("dbname");
+
             if (dbname === null) return alert("No hay empresa seleccionada");
             this.obtenerMesesAlPeriodo()
-            const request = await fetch(`/api/${dbname}/balanceGeneral/${this.ejercicio}?periodos=${this.periodos}`)
-            if (!request.ok) {
-                this.loadingModalText = "Error al obtener las categorías contables"
-                throw new Error("Error al obtener las categorías contables");
-            }
-
-            const response = await request.json()
-
+            const response = await contpaqiSDK.contabilidad(dbname).balanceGeneral(this.ejercicio, this.periodos);
             if (response.error) return this.loadingModalText = response.message;
             this.data = response.data
             this.categorias = Object.keys(this.data)
-            setTimeout(() => document.getElementById('modal-button-close').click(), 500)
+            
+            bootstrap.Modal.getInstance(loadingModal).hide();
         },
         obtenerMesesAlPeriodo() {
             const meses = [];
@@ -72,6 +76,6 @@ const app = Vue.createApp({
             }
         }
     }
-})
+}
 
-app.mount("#app")
+Vue.createApp(balanceGeneralVueParams).mount("#balance-general-app");
