@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app
-from middleware.security import isSignedIn
+from middleware.security import protectApi
 from datetime import datetime
 from lib.contpaqisdk import ContpaqISDK
 
@@ -8,24 +8,24 @@ apicontabilidad = Blueprint("apicontabilidad", __name__, url_prefix="/contabilid
 def sqlconfig() -> dict:
     return current_app.config["appconfig"]["database"]
 
-@isSignedIn
 @apicontabilidad.route("/empresas")
+@protectApi
 def listado_empresas():
     sdk = ContpaqISDK(sqlconfig())
     empresas = sdk.contabilidad.listaEmpresas()
     return {"error": False, "message": "In Test", "empresas": empresas}
 
 
-@isSignedIn
 @apicontabilidad.route("/<dbname>/cuentasGlobales")
+@protectApi
 def cuentas_globales(dbname: str):
     sdk = ContpaqISDK(sqlconfig())
     empresas = sdk.contabilidad.cuentasGlobales(empresa=dbname)
     return {"error": False, "message": "", "empresas": empresas}
 
 
-@isSignedIn
 @apicontabilidad.route("/<dbname>/balanceGeneral/<ejercicio>")
+@protectApi
 def balanceGeneral(dbname, ejercicio: int = None):
 
     dbconfig = sqlconfig()
@@ -76,8 +76,8 @@ def balanceGeneral(dbname, ejercicio: int = None):
     return {"error": False, "data": data}
 
 
-@isSignedIn
 @apicontabilidad.route("/<dbname>/analisisBalanceGeneral/<ejercicio>")
+@protectApi
 def analisisBalanceGeneral(dbname, ejercicio: int = None):
     if ejercicio is None:
         ejercicio = datetime.now().year
@@ -96,7 +96,7 @@ def analisisBalanceGeneral(dbname, ejercicio: int = None):
             subcuentas = sdk.contabilidad.subcuentas(dbname=dbname,cuentaid=subcuenta['idCuenta'])
             
             for sc in subcuentas:
-                saldos = sdk.contabilidad.saldoSubCuentas(
+                saldos: dict = sdk.contabilidad.saldoSubCuentas(
                     dbname=dbname, idCuenta=sc["idCuenta"], ejercicio=ejercicio
                 )
 

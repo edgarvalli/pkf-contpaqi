@@ -1,12 +1,14 @@
 from lib.sqlitedb import SQLiteDB
 from flask import Blueprint, request
-from middleware.security import apiAllowed
+from middleware.security import protectApi
 from utils.encrypt import encrypt_password
 
 common = Blueprint("common", __name__, url_prefix="/common")
+unprotected_routes = ["/common/<model>/"]
 
-@apiAllowed
+
 @common.route("/<model>/")
+@protectApi
 def commonSearch(model: str):
 
     db = SQLiteDB()
@@ -23,7 +25,6 @@ def commonSearch(model: str):
 
     return db.fetchall(**params)
 
-@apiAllowed
 @common.route("/<model>/save", methods=["POST"])
 def commonSave(model: str):
     data = request.get_json()
@@ -43,7 +44,6 @@ def commonSave(model: str):
 
     return db.save(table=model, data=data["data"])
 
-@apiAllowed
 @common.route("/<model>/update/<id>", methods=["POST", "UPDATE"])
 def commonUpdate(model: str, id: int = None):
     data = request.get_json()
@@ -60,7 +60,6 @@ def commonUpdate(model: str, id: int = None):
 
     return db.update(table=model, record_id=id, data=data["data"])
 
-@apiAllowed
 @common.route("/users/changePassword/<id>", methods=["POST", "UPDATE"])
 def userChangePassword(id: int = None):
     if id is None:
@@ -77,7 +76,6 @@ def userChangePassword(id: int = None):
 
     return db.update(table="users", record_id=id, data=data)
 
-@apiAllowed
 @common.route("/users/delete/<id>", methods=["GET", "DELETE"])
 def usersDelete(id: int = None):
     if id is None:
