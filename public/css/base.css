@@ -38,7 +38,8 @@ body {
 
 .pointer:hover {
     cursor: pointer;
-    background: #f4f4f4;
+    color: #e0e0e0;
+    transition: all .25s;
 }
 
 .ml-1 {
@@ -181,4 +182,9 @@ html[data-bs-theme=dark] .btn-light {
     background: #232323;
     border: none;
     transition: all .25s;
+}
+
+.circle-avatar {
+    width: 2rem;
+    border-radius: 50%;
 }

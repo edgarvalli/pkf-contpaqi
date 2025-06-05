@@ -46,8 +46,15 @@
                     <a href="/login/singout" class="nav-link">Cerrar Sesión</a>
                 </li>
             </ul>
-            <div class="d-flex" onclick="abrirMenuEmpresas()">
-                <h5 style="font-size: 12px; color: white; cursor: pointer;" id="nombreEmpresa"></h5>
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end align-items-center mb-1" style="height: 1.5rem;">
+                    {{session['user_info']['displayname']}}
+                    <img src="/public/img/avatar.png" class="circle-avatar ml-2" alt="avatar">
+                </div>
+                <div class="col-12 d-flex justify-content-end align-items-center pointer" style="height: 1.5rem;" onclick="abrirMenuEmpresas()">
+                    <span style="font-size: 12px; color: white;" class="align-middle" id="nombreEmpresa"></span>
+                    <i class="bi bi-building ml-2" style="font-size: 15px;"></i>
+                </div>
             </div>
         </div>
     </div>
